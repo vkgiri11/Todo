@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import './App.css';
 
-function App() {
-  const [count, setCount] = useState(0)
+import CourseGoalList from './components/CourseGoals/CourseGoalList/CourseGoalList';
+import CourseInput from './components/CourseGoals/CourseInput/CourseInput';
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+const App = () => {
+	const [courseGoals, setCourseGoals] = useState([]);
+	const [completedGoals, setCompletedGoals] = useState([]);
 
-export default App
+	const addGoalHandler = (enteredText) => {
+		setCourseGoals((prevGoals) => {
+			const updatedGoals = [...prevGoals];
+			updatedGoals.unshift({ text: enteredText, id: Math.random().toString() });
+			return updatedGoals;
+		});
+	};
+
+	const deleteItemHandler = (goalId) => {
+		setCourseGoals((prevGoals) => {
+			const updatedGoals = prevGoals.filter((goal) => goal.id !== goalId);
+			return updatedGoals;
+		});
+		setCompletedGoals((prev) => [...prev, courseGoals.filter((item) => item.id === goalId)[0]]);
+	};
+
+	return (
+		<div>
+			<section id="goal-form">
+				<CourseInput onAddGoal={addGoalHandler} />
+			</section>
+			<section id="goals">
+				<CourseGoalList
+					items={courseGoals}
+					completed={completedGoals}
+					onDeleteItem={deleteItemHandler}
+				/>
+			</section>
+		</div>
+	);
+};
+
+export default App;

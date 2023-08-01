@@ -1,0 +1,8 @@
+{
+  "name": "todo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/vkgiri11/Todo.git",
+  "author": "vkgiri <vkgiri11@gmail.com>",
+  "license": "MIT"
+}

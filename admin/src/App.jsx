@@ -7,13 +7,14 @@ import './App.css';
 import { setAxiosDefault, setToken } from './axiosDefaults';
 import { AuthState } from './context/authProvider';
 import config from './../config';
+
 import Home from './views/Home/index';
 import Login from './views/Home/Login';
 
 const oktaAuth = new OktaAuth(config.oidc);
 
 const App = () => {
-	const  {user}  = AuthState();
+	const { user } = AuthState();
 
 	const history = useHistory();
 

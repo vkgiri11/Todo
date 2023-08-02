@@ -2,7 +2,6 @@ import CourseGoalItem from '../CourseGoalItem/CourseGoalItem';
 import './CourseGoalList.css';
 
 const CourseGoalList = ({ courseGoals, completed, onDeleteItem }) => {
-
 	return (
 		<ul className="goal-list">
 			<span className="goal-header">Tasks</span>

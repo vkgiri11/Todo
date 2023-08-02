@@ -8,6 +8,7 @@ import CourseInput from '../components/CourseGoals/CourseInput/CourseInput';
 const List = () => {
 	const [courseGoals, setCourseGoals] = useState([]);
 	const [completedGoals, setCompletedGoals] = useState([]);
+	const [refreshList, setRefreshList] = useState(false);
 
 	const { user } = AuthState();
 
@@ -20,25 +21,32 @@ const List = () => {
 			});
 
 			console.log('Task Created!!');
-			setCourseGoals((p) => [{ name: enteredText, status: false, creator: user._id }, ...p]);
+			setRefreshList(true);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const deleteItemHandler = (goalId) => {
-		setCourseGoals((prevGoals) => {
-			const updatedGoals = prevGoals.filter((goal) => goal.id !== goalId);
-			return updatedGoals;
-		});
-		setCompletedGoals((prev) => [...prev, courseGoals.filter((item) => item.id === goalId)[0]]);
+	const deleteItemHandler = async (goalId) => {
+		try {
+			const res = await axios.put(`/task/${goalId}`);
+
+			console.log('Task Completed !!');
+			setRefreshList(true);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	const getAllGoals = async () => {
 		try {
 			const res = await axios.get(`/task/${user._id}`);
 
-			if (res.status === 201) setCourseGoals(res.data.data);
+			if (res.status === 201) {
+				setRefreshList(true);
+				setCourseGoals(res.data.tasks);
+				setCompletedGoals(res.data.completed);
+			}
 		} catch (error) {
 			console.log(error);
 		}
@@ -46,7 +54,7 @@ const List = () => {
 
 	useEffect(() => {
 		if (user?._id) getAllGoals();
-	}, []);
+	}, [user, refreshList]);
 
 	return (
 		<div>

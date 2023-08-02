@@ -37,7 +37,10 @@ const Home = () => {
 				email: userInfo.email,
 			});
 
-			setUser((p) => ({ ...p, ...res.data }));
+			if (res.status === 201) {
+				setUser((p) => ({ ...p, ...res.data }));
+				localStorage.setItem('loginUser', JSON.stringify(res.data));
+			}
 		} catch (error) {
 			console.log(error);
 		}

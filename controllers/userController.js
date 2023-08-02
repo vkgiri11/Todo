@@ -9,7 +9,7 @@ export const registerUser = async (req, res) => {
 		const existingUser = await UserModel.findOne({ email });
 
 		if (existingUser)
-			return res.status(200).json({
+			return res.status(201).json({
 				_id: existingUser._id,
 				name: existingUser.name,
 				email: existingUser.email,

@@ -6,7 +6,15 @@ export const getAllTasks = async (req, res) => {
 	try {
 		const result = await TaskModel.find({ creator: userId });
 
-		res.status(201).json({ data: result });
+		const tasks = [],
+			completed = [];
+
+		for (const task of result) {
+			if (task.status) completed.push(task);
+			else tasks.push(task);
+		}
+
+		res.status(201).json({ tasks: tasks, completed: completed });
 	} catch (error) {
 		console.log(error);
 		res.status(404).json({ message: error.message });
@@ -26,6 +34,19 @@ export const createTask = async (req, res) => {
 		const createdTask = await TaskModel.findOne({ _id: newTask._id });
 
 		res.status(200).json({ data: createdTask });
+	} catch (error) {
+		console.log(error);
+		res.status(404).json({ message: error.message });
+	}
+};
+
+export const updateTask = async (req, res) => {
+	const { taskId } = req.params;
+
+	try {
+		const result = await TaskModel.findByIdAndUpdate(taskId, { status: true });
+
+		res.status(201).json({ data: result });
 	} catch (error) {
 		console.log(error);
 		res.status(404).json({ message: error.message });

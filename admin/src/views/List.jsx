@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 
 import { AuthState } from '../context/authProvider';
@@ -18,6 +18,8 @@ const List = () => {
 				status: false,
 				creator: user._id,
 			});
+
+			console.log('Task Created!!');
 		} catch (error) {
 			console.log(error);
 		}
@@ -30,6 +32,19 @@ const List = () => {
 		});
 		setCompletedGoals((prev) => [...prev, courseGoals.filter((item) => item.id === goalId)[0]]);
 	};
+
+	const getAllGoals = async () => {
+		try {
+			const res = await axios.get(`/task/${user._id}`);
+			console.log(res);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		if (user._id) getAllGoals();
+	}, []);
 
 	return (
 		<div>

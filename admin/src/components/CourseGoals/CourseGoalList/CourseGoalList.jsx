@@ -10,11 +10,11 @@ const CourseGoalList = (props) => {
 			) : (
 				props.items.map((goal) => (
 					<CourseGoalItem
-						key={goal.id}
-						id={goal.id}
+						key={goal._id}
+						id={goal._id}
 						onDelete={props.onDeleteItem}
 						cursorStyle="pointer">
-						{goal.text}
+						{goal.name}
 					</CourseGoalItem>
 				))
 			)}
@@ -23,8 +23,8 @@ const CourseGoalList = (props) => {
 				<p style={{ textAlign: 'center' }}>Complete a task soon.</p>
 			) : (
 				props.completed.map((goal) => (
-					<CourseGoalItem key={goal.id} id={goal.id} cursorStyle="default">
-						{goal.text}
+					<CourseGoalItem key={goal._id} id={goal._id} cursorStyle="default">
+						{goal.name}
 					</CourseGoalItem>
 				))
 			)}

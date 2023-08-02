@@ -1,5 +1,18 @@
 import TaskModel from '../models/taskModel.js';
 
+export const getAllTasks = async (req, res) => {
+	const { userId } = req.params;
+
+	try {
+		const result = await TaskModel.find({ creator: userId });
+
+		res.status(201).json({ data: result });
+	} catch (error) {
+		console.log(error);
+		res.status(404).json({ message: error.message });
+	}
+};
+
 export const createTask = async (req, res) => {
 	const { name, status, creator } = req.body;
 

@@ -1,34 +1,32 @@
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-
-import UserModel from '../models/userModel.js';
-
-dotenv.config();
-
-const secret = process.env.JWT_SECRET;
+import OktaJwtVerifier from '@okta/jwt-verifier';
 
 const authMiddleware = async (req, res, next) => {
-	let token;
+	const oktaJwtVerifier = new OktaJwtVerifier({
+		clientId: sampleConfig.resourceServer.oidc.clientId,
+		issuer: sampleConfig.resourceServer.oidc.issuer,
+		assertClaims: sampleConfig.resourceServer.assertClaims,
+		testing: sampleConfig.resourceServer.oidc.testing,
+	});
 
-	if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-		try {
-			token = req.headers.authorization.split(' ')[1];
+	const authHeader = req.headers.authorization || '';
+	const match = authHeader.match(/Bearer (.+)/);
 
-			const decodedData = jwt.decode(token, secret);
-
-			req.user = await UserModel.findById(decodedData.id).select('-password');
-
-			next();
-		} catch (error) {
-			res.status(401);
-			console.log(`Not authorized =====>> ${error}`);
-		}
-	}
-
-	if (!token) {
+	if (!match) {
 		res.status(401);
-		console.log('Not authorized, no token');
+		return next('Unauthorized');
 	}
+
+	const accessToken = match[1];
+	const audience = sampleConfig.resourceServer.assertClaims.aud;
+	return oktaJwtVerifier
+		.verifyAccessToken(accessToken, audience)
+		.then((jwt) => {
+			req.jwt = jwt;
+			next();
+		})
+		.catch((err) => {
+			res.status(401).send(err.message);
+		});
 };
 
 export default authMiddleware;

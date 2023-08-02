@@ -20,6 +20,7 @@ const List = () => {
 			});
 
 			console.log('Task Created!!');
+			setCourseGoals((p) => [{ name: enteredText, status: false, creator: user._id }, ...p]);
 		} catch (error) {
 			console.log(error);
 		}
@@ -36,14 +37,15 @@ const List = () => {
 	const getAllGoals = async () => {
 		try {
 			const res = await axios.get(`/task/${user._id}`);
-			console.log(res);
+
+			if (res.status === 201) setCourseGoals(res.data.data);
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
 	useEffect(() => {
-		if (user._id) getAllGoals();
+		if (user?._id) getAllGoals();
 	}, []);
 
 	return (
@@ -53,7 +55,7 @@ const List = () => {
 			</section>
 			<section id="goals">
 				<CourseGoalList
-					items={courseGoals}
+					courseGoals={courseGoals}
 					completed={completedGoals}
 					onDeleteItem={deleteItemHandler}
 				/>

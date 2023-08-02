@@ -1,28 +1,29 @@
 import CourseGoalItem from '../CourseGoalItem/CourseGoalItem';
 import './CourseGoalList.css';
 
-const CourseGoalList = (props) => {
+const CourseGoalList = ({ courseGoals, completed, onDeleteItem }) => {
+
 	return (
 		<ul className="goal-list">
 			<span className="goal-header">Tasks</span>
-			{!props.items.length ? (
+			{!courseGoals.length ? (
 				<p style={{ textAlign: 'center' }}>No goals found. Maybe add one?</p>
 			) : (
-				props.items.map((goal) => (
+				courseGoals.map((goal) => (
 					<CourseGoalItem
 						key={goal._id}
 						id={goal._id}
-						onDelete={props.onDeleteItem}
+						onDelete={onDeleteItem}
 						cursorStyle="pointer">
 						{goal.name}
 					</CourseGoalItem>
 				))
 			)}
 			<span className="goal-header">Completed Tasks</span>
-			{!props.completed.length ? (
+			{!completed.length ? (
 				<p style={{ textAlign: 'center' }}>Complete a task soon.</p>
 			) : (
-				props.completed.map((goal) => (
+				completed.map((goal) => (
 					<CourseGoalItem key={goal._id} id={goal._id} cursorStyle="default">
 						{goal.name}
 					</CourseGoalItem>

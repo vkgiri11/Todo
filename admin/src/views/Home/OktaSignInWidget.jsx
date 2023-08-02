@@ -1,31 +1,57 @@
 import React, { useEffect, useRef } from 'react';
+import { useOktaAuth } from '@okta/okta-react';
 import OktaSignIn from '@okta/okta-signin-widget';
 import config from '../.././../config';
 
-const OktaSignInWidget = ({ onSuccess, onError }) => {
+const OktaSignInWidget = () => {
 	const widgetRef = useRef();
+
+	const { oktaAuth } = useOktaAuth();
+
 	useEffect(() => {
-		if (!widgetRef.current) {
-			return false;
-		}
+		if (!widgetRef.current) return false;
 
-		const widget = new OktaSignIn(config.widget);
+		const { issuer, clientId, redirectUri, scopes } = config.oidc;
 
-		// Search for URL Parameters to see if a user is being routed to the application to recover password
-		var searchParams = new URL(window.location.href).searchParams;
-		widget.otp = searchParams.get('otp');
-		widget.state = searchParams.get('state');
-		widget
-			.showSignInToGetTokens({
-				el: widgetRef.current,
-			})
-			.then(onSuccess)
-			.catch(onError);
+		const searchParams = new URL(window.location.href).searchParams;
+		const otp = searchParams.get('otp');
+		const state = searchParams.get('state');
+
+		const widget = new OktaSignIn({
+			baseUrl: issuer.split('/oauth2')[0],
+			clientId,
+			redirectUri,
+			i18n: {
+				en: {
+					'primaryauth.title': 'Sign in to To-Do List',
+				},
+			},
+			authParams: {
+				issuer,
+				scopes,
+			},
+			state,
+			otp,
+		});
+
+		widget.renderEl(
+			{ el: widgetRef.current },
+			(res) => {
+				oktaAuth.handleLoginRedirect(res.tokens);
+			},
+			(err) => {
+				throw err;
+			}
+		);
 
 		return () => widget.remove();
-	}, [onSuccess, onError]);
+	}, [oktaAuth]);
 
-	return <div ref={widgetRef} />;
+	return (
+		<>
+			<div ref={widgetRef} />
+		</>
+	);
 };
 
 export default OktaSignInWidget;

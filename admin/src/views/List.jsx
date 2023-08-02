@@ -43,13 +43,13 @@ const List = () => {
 			const res = await axios.get(`/task/${user._id}`);
 
 			if (res.status === 201) {
-				setRefreshList(true);
 				setCourseGoals(res.data.tasks);
 				setCompletedGoals(res.data.completed);
 			}
 		} catch (error) {
 			console.log(error);
 		}
+		setRefreshList(false);
 	};
 
 	useEffect(() => {

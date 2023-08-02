@@ -43,6 +43,7 @@ const Home = () => {
 			}
 		} catch (error) {
 			console.log(error);
+			handleLogout();
 		}
 	};
 

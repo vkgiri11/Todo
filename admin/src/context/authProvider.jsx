@@ -10,7 +10,8 @@ export const AuthProvider = ({ children }) => {
 
 	useEffect(() => {
 		const userInfo = JSON.parse(localStorage.getItem('okta-token-storage'));
-		setUser({ token: userInfo.accessToken.accessToken });
+
+		if (userInfo) setUser({ token: userInfo?.accessToken?.accessToken });
 
 		if (!userInfo) history('/home');
 	}, [history]);

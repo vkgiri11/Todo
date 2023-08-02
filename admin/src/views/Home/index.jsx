@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import axios from 'axios';
 import { useOktaAuth } from '@okta/okta-react';
 
 import Button from '../../components/UI/Button/Button';
@@ -7,7 +8,6 @@ import List from '../List';
 
 const Home = () => {
 	const [userInfo, setUserInfo] = useState();
-	const [isLoading, setIsLoading] = useState(false);
 	const history = useHistory();
 
 	const { oktaAuth, authState } = useOktaAuth();
@@ -17,7 +17,6 @@ const Home = () => {
 	const handleLogout = async () => oktaAuth.signOut();
 
 	const getUserDetails = () => {
-		setIsLoading(true);
 		oktaAuth
 			.getUser()
 			.then((info) => {
@@ -26,13 +25,31 @@ const Home = () => {
 			.catch((err) => {
 				console.error(err);
 			});
-		setIsLoading(false);
+	};
+
+	const registerUser = async () => {
+		try {
+			const { data } = await axios.post('user', {
+				name: userInfo.name,
+				email: userInfo.email,
+			});
+
+			console.log(data);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {
 		if (!authState || !authState.isAuthenticated) setUserInfo(null);
 		else getUserDetails();
 	}, [authState, oktaAuth]);
+
+	useEffect(() => {
+		if (!userInfo) return;
+
+		registerUser();
+	}, [userInfo]);
 
 	if (!authState) {
 		return (
@@ -84,7 +101,9 @@ const Home = () => {
 				{authState.isAuthenticated ? (
 					<List />
 				) : (
-					<div style={{ fontSize: '30px', color: 'red', paddingTop: '50px' }}>Login to use the to do list</div>
+					<div style={{ fontSize: '30px', color: 'red', paddingTop: '50px' }}>
+						Login to use the to do list
+					</div>
 				)}
 			</div>
 		</>

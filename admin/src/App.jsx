@@ -7,6 +7,7 @@ import './App.css';
 import config from './../config';
 import Home from './views/Home/index';
 import Login from './views/Home/Login';
+import { setAxiosDefault } from './axiosDefaults';
 
 const oktaAuth = new OktaAuth(config.oidc);
 
@@ -20,6 +21,8 @@ const App = () => {
 	const restoreOriginalUri = async (_oktaAuth, originalUri) => {
 		history.replace(toRelativeUrl(originalUri || '', window.location.origin));
 	};
+
+	setAxiosDefault();
 
 	return (
 		<>

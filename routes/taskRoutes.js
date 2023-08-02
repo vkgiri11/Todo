@@ -1,13 +1,12 @@
 import express from 'express';
 
-// import authMiddleware from '../middleware/authMiddleWare.js';
-// import { getAllTasks } from '../controllers/taskController';
-// import authMiddleware from '../middleware/authMiddleware';
+import authMiddleware from '../middleware/authMiddleWare.js';
+import { createTask } from '../controllers/taskController.js';
 
 const router = express.Router();
 
 // router.get('/', authMiddleware, getAllTasks);
-// router.post('/', createTask);
+router.post('/', authMiddleware, createTask);
 // router.put('/', updateTask);
 
 export default router;

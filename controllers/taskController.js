@@ -1,12 +1,17 @@
-import Task from '../models/taskModel';
+import TaskModel from '../models/taskModel.js';
 
-export const getAllTasks = async (req, res) => {
-	const { id } = req.user._id;
-  
+export const createTask = async (req, res) => {
+	// const { id } = req.user._id;
+	const { name, status, creator } = req.body;
+
+	const taskData = { name, status, creator };
+
 	try {
-		const tasks = await Task.findById(id);
+		const newTask = await TaskModel.create(taskData);
 
-		res.status(200).json({ data: tasks });
+		const createdTask = await TaskModel.findOne({ _id: newTask._id }).populate('creator');
+
+		res.status(200).json({ data: createdTask });
 	} catch (error) {
 		console.log(error);
 		res.status(404).json({ message: error.message });

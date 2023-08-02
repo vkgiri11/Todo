@@ -2,10 +2,8 @@ import OktaJwtVerifier from '@okta/jwt-verifier';
 
 const authMiddleware = async (req, res, next) => {
 	const oktaJwtVerifier = new OktaJwtVerifier({
-		clientId: sampleConfig.resourceServer.oidc.clientId,
-		issuer: sampleConfig.resourceServer.oidc.issuer,
-		assertClaims: sampleConfig.resourceServer.assertClaims,
-		testing: sampleConfig.resourceServer.oidc.testing,
+		clientId: '0oaamlcvdkX0K5gM75d7',
+		issuer: 'https://dev-95093015.okta.com/oauth2/default',
 	});
 
 	const authHeader = req.headers.authorization || '';
@@ -17,7 +15,7 @@ const authMiddleware = async (req, res, next) => {
 	}
 
 	const accessToken = match[1];
-	const audience = sampleConfig.resourceServer.assertClaims.aud;
+	const audience = 'api://default';
 	return oktaJwtVerifier
 		.verifyAccessToken(accessToken, audience)
 		.then((jwt) => {

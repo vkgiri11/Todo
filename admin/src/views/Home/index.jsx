@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { useOktaAuth } from '@okta/okta-react';
 
+import { AuthState } from '../../context/authProvider';
 import Button from '../../components/UI/Button/Button';
 import List from '../List';
 
@@ -11,6 +12,8 @@ const Home = () => {
 	const history = useHistory();
 
 	const { oktaAuth, authState } = useOktaAuth();
+
+	const { setUser } = AuthState();
 
 	const handleLogin = async () => history.push('/login');
 
@@ -34,7 +37,7 @@ const Home = () => {
 				email: userInfo.email,
 			});
 
-			console.log(data);
+			setUser((p) => ({ ...p, data }));
 		} catch (error) {
 			console.log(error);
 		}

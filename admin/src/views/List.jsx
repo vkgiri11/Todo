@@ -13,18 +13,11 @@ const List = () => {
 
 	const addGoalHandler = async (enteredText) => {
 		try {
-			const { data } = await axios.post('/task', {
+			const res = await axios.post('/task', {
 				name: enteredText,
 				status: false,
 				creator: user._id,
 			});
-
-			console.log(data);
-			// setCourseGoals((prevGoals) => {
-			// 	const updatedGoals = [...prevGoals];
-			// 	updatedGoals.unshift({ text: enteredText, id: Math.random().toString() });
-			// 	return updatedGoals;
-			// });
 		} catch (error) {
 			console.log(error);
 		}

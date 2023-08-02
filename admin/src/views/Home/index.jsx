@@ -32,12 +32,12 @@ const Home = () => {
 
 	const registerUser = async () => {
 		try {
-			const { data } = await axios.post('user', {
+			const res = await axios.post('user', {
 				name: userInfo.name,
 				email: userInfo.email,
 			});
 
-			setUser((p) => ({ ...p, data }));
+			setUser((p) => ({ ...p, ...res.data }));
 		} catch (error) {
 			console.log(error);
 		}

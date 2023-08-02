@@ -3,10 +3,7 @@ import mongoose from 'mongoose';
 const taskSchema = mongoose.Schema({
 	name: { type: String, trim: true },
 	status: { type: Boolean },
-	creator: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: 'User',
-	},
+	creator: { type: String },
 	createdAt: {
 		type: Date,
 		default: new Date(),

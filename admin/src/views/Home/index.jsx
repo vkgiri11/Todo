@@ -41,7 +41,9 @@ const Home = () => {
 			});
 
 			if (res.status === 201) {
-				setUser((p) => ({ ...p, ...res.data }));
+        const userInfo = JSON.parse(localStorage.getItem('okta-token-storage'));
+
+				setUser((p) => ({ ...p, ...res.data, token: userInfo.accessToken.accessToken  }));
 				localStorage.setItem('loginUser', JSON.stringify(res.data));
 			}
 		} catch (error) {

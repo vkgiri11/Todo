@@ -2,8 +2,8 @@ import OktaJwtVerifier from '@okta/jwt-verifier';
 
 const authMiddleware = async (req, res, next) => {
 	const oktaJwtVerifier = new OktaJwtVerifier({
-		clientId: '0oaamlcvdkX0K5gM75d7',
-		issuer: 'https://dev-95093015.okta.com/oauth2/default',
+		clientId: process.env.ClIENT_ID,
+		issuer: process.env.ISSUER,
 	});
 
 	const authHeader = req.headers.authorization || '';

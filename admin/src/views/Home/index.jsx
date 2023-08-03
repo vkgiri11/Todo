@@ -18,7 +18,7 @@ const Home = () => {
 	const handleLogin = async () => history.push('/login');
 
 	const handleLogout = async () => {
-		oktaAuth.signOut();
+		await oktaAuth.signOut();
 		localStorage.removeItem('loginUser');
 	};
 
